@@ -1,0 +1,13 @@
+langchain
+langchain-anthropic
+langchain-community
+langchain-core
+langchain-experimental
+langgraph
+python-dotenv
+mysql-connector-python
+requests
+anthropic
+yfinance
+tavily-python
+streamlit
