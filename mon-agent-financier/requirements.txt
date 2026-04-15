@@ -11,3 +11,5 @@ anthropic
 yfinance
 tavily-python
 streamlit
+fastapi
+uvicorn
