@@ -1,6 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-from langchain_core.tools import tool
 
 
 def get_connection():
@@ -13,7 +12,6 @@ def get_connection():
     )
 
 
-@tool
 def rechercher_client(query: str) -> str:
     """Recherche un client dans la base de données par nom ou identifiant.
     Entrée : le nom ou l'identifiant du client à rechercher.
@@ -43,7 +41,6 @@ def rechercher_client(query: str) -> str:
         return f"Erreur de base de données : {e}"
 
 
-@tool
 def rechercher_produit(query: str) -> str:
     """Recherche un produit dans la base de données par nom ou identifiant.
     Entrée : le nom ou l'identifiant du produit à rechercher.

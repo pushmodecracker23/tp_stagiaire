@@ -1,8 +1,6 @@
 import yfinance as yf
-from langchain_core.tools import tool
 
 
-@tool
 def get_networth(input: str) -> str:
     """Calcule la valeur totale d'un portefeuille boursier à partir des prix réels Yahoo Finance.
     Format d'entrée : 'SYMBOLE:QUANTITE|SYMBOLE:QUANTITE' ex: 'AAPL:10|TSLA:5|MSFT:3'.

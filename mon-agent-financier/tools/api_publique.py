@@ -1,8 +1,6 @@
 import requests
-from langchain_core.tools import tool
 
 
-@tool
 def convertir_devise(input_str: str) -> str:
     """Convertit un montant d'une devise à une autre via l'API Frankfurter (taux de change réels).
     Format d'entrée : 'montant,FROM,TO' ex: '100,EUR,USD'.

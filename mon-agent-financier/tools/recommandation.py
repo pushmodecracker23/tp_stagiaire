@@ -1,5 +1,3 @@
-from langchain_core.tools import tool
-
 CATALOGUE = [
     {
         "id": 1,
@@ -52,7 +50,6 @@ CATALOGUE = [
 ]
 
 
-@tool
 def recommander_produits(input_str: str) -> str:
     """Recommande des produits adaptés au budget, à la catégorie et au type de compte client.
     Format d'entrée : 'budget,categorie,type_compte' ex: '500,Informatique,Premium'.

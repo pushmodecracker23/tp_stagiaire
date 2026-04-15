@@ -1,7 +1,3 @@
-from langchain_core.tools import tool
-
-
-@tool
 def calculer_tva(input_str: str) -> str:
     """Calcule la TVA et le prix TTC à partir du prix HT.
     Format d'entrée : 'prix_ht,taux' ex: '100,20' pour 100€ HT avec TVA à 20%.
@@ -25,7 +21,6 @@ def calculer_tva(input_str: str) -> str:
         return "Erreur : les valeurs doivent être des nombres valides."
 
 
-@tool
 def calculer_interets_composes(input_str: str) -> str:
     """Calcule les intérêts composés d'un placement financier.
     Format d'entrée : 'capital,taux,années' ex: '1000,5,10' pour 1000€ à 5% sur 10 ans.
@@ -51,7 +46,6 @@ def calculer_interets_composes(input_str: str) -> str:
         return "Erreur : les valeurs doivent être des nombres valides."
 
 
-@tool
 def calculer_marge(input_str: str) -> str:
     """Calcule la marge commerciale entre un prix de vente et un coût d'achat.
     Format d'entrée : 'prix_vente,cout_achat' ex: '150,100'.
@@ -79,7 +73,6 @@ def calculer_marge(input_str: str) -> str:
         return "Erreur : les valeurs doivent être des nombres valides."
 
 
-@tool
 def calculer_mensualite_pret(input_str: str) -> str:
     """Calcule la mensualité d'un prêt bancaire ainsi que son coût total.
     Format d'entrée : 'capital,taux_annuel,mois' ex: '10000,5,24' pour 10000€ à 5% sur 24 mois.

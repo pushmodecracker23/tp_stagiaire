@@ -1,5 +1,4 @@
 import yfinance as yf
-from langchain_core.tools import tool
 
 
 def _extraire_donnees_ticker(ticker_sym: str):
@@ -26,7 +25,6 @@ def _extraire_donnees_ticker(ticker_sym: str):
     return float(prix), float(open_price), int(volume), currency
 
 
-@tool
 def obtenir_cours_action(symbole: str) -> str:
     """Retourne le cours réel d'une action boursière via Yahoo Finance.
     Entrée : le symbole de l'action (ex: AAPL, MSFT, TSLA, GOOGL).
@@ -50,7 +48,6 @@ def obtenir_cours_action(symbole: str) -> str:
         return f"Erreur lors de la récupération du cours de '{symbole}' : {e}"
 
 
-@tool
 def obtenir_cours_crypto(symbole: str) -> str:
     """Retourne le cours réel d'une cryptomonnaie via Yahoo Finance.
     Entrée : le symbole de la crypto (ex: BTC, ETH, SOL, ADA) ou avec paire (ex: BTC-USD).
