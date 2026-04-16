@@ -2,10 +2,6 @@ import yfinance as yf
 
 
 def get_networth(input: str) -> str:
-    """Calcule la valeur totale d'un portefeuille boursier à partir des prix réels Yahoo Finance.
-    Format d'entrée : 'SYMBOLE:QUANTITE|SYMBOLE:QUANTITE' ex: 'AAPL:10|TSLA:5|MSFT:3'.
-    Retourne la valeur par ligne et le total du portefeuille.
-    """
     try:
         positions = []
         for part in input.strip().split("|"):

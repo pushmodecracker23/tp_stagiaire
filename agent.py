@@ -1,11 +1,9 @@
-import uuid
-from langchain_anthropic import ChatAnthropic
+import os
+from langchain_openai import ChatOpenAI
 from langchain_classic.tools import Tool
-from langgraph.prebuilt import create_react_agent, ToolNode
-from langgraph.checkpoint.memory import MemorySaver
-
-# ATTENTION SECURITE : PythonREPLTool exécute du code arbitraire.
-# Ne jamais utiliser en production sans sandbox.
+from langchain_classic.agents import create_openai_tools_agent, AgentExecutor
+from langchain_classic.memory import ConversationBufferMemory
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_experimental.tools import PythonREPLTool
 
 from tools.database import rechercher_client, rechercher_produit
@@ -21,10 +19,6 @@ from tools.recommandation import recommander_produits
 from tools.portefeuille import get_networth
 from tools.tavily import recherche_tavily
 
-# Identifiant de session unique pour la mémoire conversationnelle (CLI)
-SESSION_THREAD_ID = str(uuid.uuid4())
-
-# PythonREPLTool — exécution de code Python arbitraire pour calculs avancés
 _python_repl = PythonREPLTool()
 _python_repl.description = (
     "Exécute du code Python pour des calculs complexes non couverts par les autres outils. "
@@ -132,55 +126,46 @@ TOOLS = [
             "informations récentes non disponibles via les autres outils."
         ),
     ),
-    _python_repl,      # PythonREPLTool est déjà un BaseTool
+    _python_repl,
 ]
 
 
-def creer_agent():
-    """Crée et retourne un agent ReAct LangGraph avec mémoire conversationnelle."""
-    llm = ChatAnthropic(model="claude-3-5-haiku-20241022", temperature=0)
-
-    # ToolNode gère l'exécution des appels d'outils dans le graphe LangGraph
-    tool_node = ToolNode(TOOLS)  # noqa: F841 — utilisé implicitement par create_react_agent
-
-    memory = MemorySaver()
-
-    agent = create_react_agent(
-        model=llm,
-        tools=TOOLS,
-        checkpointer=memory,
+def creer_agent() -> AgentExecutor:
+    llm = ChatOpenAI(
+        model="gpt-4o-mini",
+        temperature=0,
+        openai_api_key=os.getenv("OPENAI_API_KEY"),
     )
 
-    return agent
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "Tu es un assistant financier précis. Utilise les outils disponibles pour répondre aux questions."),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{input}"),
+        MessagesPlaceholder(variable_name="agent_scratchpad"),
+    ])
+
+    memory = ConversationBufferMemory(
+        memory_key="chat_history",
+        return_messages=True,
+    )
+
+    agent = create_openai_tools_agent(llm=llm, tools=TOOLS, prompt=prompt)
+
+    agent_executor = AgentExecutor(
+        agent=agent,
+        tools=TOOLS,
+        memory=memory,
+        verbose=True,
+        handle_parsing_errors=True,
+        max_iterations=10,
+    )
+
+    return agent_executor
 
 
-def interroger_agent(agent, question: str, thread_id: str = None) -> str:
-    """Envoie une question à l'agent et retourne sa réponse textuelle.
-
-    Args:
-        agent: L'agent LangGraph créé par creer_agent().
-        question: La question à poser à l'agent.
-        thread_id: Identifiant de thread pour la mémoire. Utilise SESSION_THREAD_ID si None.
-    """
-    tid = thread_id if thread_id is not None else SESSION_THREAD_ID
-    config = {"configurable": {"thread_id": tid}}
+def interroger_agent(agent: AgentExecutor, question: str, thread_id: str = None) -> str:
     try:
-        result = agent.invoke(
-            {"messages": [("human", question)]},
-            config=config,
-        )
-        messages = result.get("messages", [])
-        if messages:
-            last = messages[-1]
-            # Compatibilité : content peut être une liste de blocs (Anthropic) ou une chaîne
-            content = last.content
-            if isinstance(content, list):
-                texts = [
-                    block.get("text", "") if isinstance(block, dict) else str(block)
-                    for block in content
-                ]
-                return "\n".join(t for t in texts if t).strip()
-            return str(content).strip()
-        return "L'agent n'a pas retourné de réponse."
+        result = agent.invoke({"input": question})
+        return result.get("output", "L'agent n'a pas retourné de réponse.")
     except Exception as e:
         return f"Erreur lors de l'interrogation de l'agent : {e}"

@@ -13,9 +13,6 @@ def get_connection():
 
 
 def rechercher_client(query: str) -> str:
-    """Recherche un client dans la base de données par nom ou identifiant.
-    Entrée : le nom ou l'identifiant du client à rechercher.
-    """
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -42,9 +39,6 @@ def rechercher_client(query: str) -> str:
 
 
 def rechercher_produit(query: str) -> str:
-    """Recherche un produit dans la base de données par nom ou identifiant.
-    Entrée : le nom ou l'identifiant du produit à rechercher.
-    """
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)

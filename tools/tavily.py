@@ -3,9 +3,6 @@ import os
 
 
 def recherche_tavily(query: str) -> str:
-    """Recherche des informations sur l'actualité financière, les entreprises et les marchés.
-    Entrée : une question ou un sujet à rechercher.
-    """
     try:
         client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
         response = client.search(query=query, search_depth="basic")

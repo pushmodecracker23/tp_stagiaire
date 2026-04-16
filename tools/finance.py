@@ -2,10 +2,7 @@ import yfinance as yf
 
 
 def _extraire_donnees_ticker(ticker_sym: str):
-    """Retourne (prix, open_price, volume, currency) ou lève une ValueError."""
     ticker = yf.Ticker(ticker_sym)
-
-    # fast_info est plus léger que .info pour les données temps-réel
     fast = ticker.fast_info
     prix = getattr(fast, "last_price", None)
 
@@ -26,9 +23,6 @@ def _extraire_donnees_ticker(ticker_sym: str):
 
 
 def obtenir_cours_action(symbole: str) -> str:
-    """Retourne le cours réel d'une action boursière via Yahoo Finance.
-    Entrée : le symbole de l'action (ex: AAPL, MSFT, TSLA, GOOGL).
-    """
     symbole = symbole.strip().upper()
     try:
         prix, open_price, volume, currency = _extraire_donnees_ticker(symbole)
@@ -49,11 +43,7 @@ def obtenir_cours_action(symbole: str) -> str:
 
 
 def obtenir_cours_crypto(symbole: str) -> str:
-    """Retourne le cours réel d'une cryptomonnaie via Yahoo Finance.
-    Entrée : le symbole de la crypto (ex: BTC, ETH, SOL, ADA) ou avec paire (ex: BTC-USD).
-    """
     symbole = symbole.strip().upper()
-    # Ajoute automatiquement -USD si aucune paire n'est précisée
     ticker_sym = symbole if "-" in symbole else f"{symbole}-USD"
     try:
         prix, open_price, volume, currency = _extraire_donnees_ticker(ticker_sym)

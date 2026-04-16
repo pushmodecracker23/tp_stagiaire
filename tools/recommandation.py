@@ -51,11 +51,6 @@ CATALOGUE = [
 
 
 def recommander_produits(input_str: str) -> str:
-    """Recommande des produits adaptés au budget, à la catégorie et au type de compte client.
-    Format d'entrée : 'budget,categorie,type_compte' ex: '500,Informatique,Premium'.
-    Catégories disponibles : Informatique, Mobilier, Audio, Toutes.
-    Types de compte : Standard, Premium, VIP.
-    """
     try:
         parts = input_str.strip().split(",")
         if len(parts) != 3:

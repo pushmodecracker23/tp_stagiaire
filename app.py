@@ -7,26 +7,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 st.set_page_config(
-    page_title="Agent Financier Claude",
+    page_title="Agent Financier",
     page_icon="💰",
     layout="wide",
 )
 
-# ---------------------------------------------------------------------------
-# Initialisation de la session (une seule fois par onglet navigateur)
-# ---------------------------------------------------------------------------
 if "agent" not in st.session_state:
     from agent import creer_agent
     st.session_state.agent = creer_agent()
     st.session_state.thread_id = str(uuid.uuid4())
-    st.session_state.messages = []  # [{"role": "user"|"assistant", "content": str}]
+    st.session_state.messages = []
 
-from agent import interroger_agent, TOOLS  # noqa: E402 — importé après init session
+from agent import interroger_agent, TOOLS
 
-
-# ---------------------------------------------------------------------------
-# Barre latérale — liste des outils disponibles + bouton reset
-# ---------------------------------------------------------------------------
 with st.sidebar:
     st.title("🛠️ Outils disponibles")
     st.caption(f"{len(TOOLS)} outils chargés")
@@ -44,21 +37,16 @@ with st.sidebar:
         st.rerun()
 
     st.divider()
-    st.caption("Modèle : Claude 3.5 Haiku")
-    st.caption("Framework : LangGraph ReAct")
+    st.caption("Modèle : GPT-4o-mini")
+    st.caption("Framework : LangChain")
 
-# ---------------------------------------------------------------------------
-# Zone principale — historique du chat
-# ---------------------------------------------------------------------------
-st.title("💰 Agent Financier Claude")
+st.title("💰 Agent Financier")
 st.caption("Posez vos questions sur les marchés, vos clients, vos calculs financiers…")
 
-# Affichage de l'historique
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# Message de bienvenue si la conversation est vide
 if not st.session_state.messages:
     with st.chat_message("assistant"):
         st.markdown(
@@ -72,20 +60,15 @@ if not st.session_state.messages:
             "Comment puis-je vous aider ?"
         )
 
-# ---------------------------------------------------------------------------
-# Champ de saisie (affiché en bas par Streamlit)
-# ---------------------------------------------------------------------------
 if prompt := st.chat_input("Posez votre question financière…"):
-    if not os.getenv("ANTHROPIC_API_KEY"):
-        st.error("ANTHROPIC_API_KEY manquante. Vérifiez votre fichier .env")
+    if not os.getenv("OPENAI_API_KEY"):
+        st.error("OPENAI_API_KEY manquante. Vérifiez votre fichier .env")
         st.stop()
 
-    # Afficher et enregistrer le message utilisateur
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Interroger l'agent et afficher la réponse
     with st.chat_message("assistant"):
         with st.spinner("Réflexion en cours…"):
             response = interroger_agent(

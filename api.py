@@ -8,11 +8,9 @@ from pydantic import BaseModel
 
 load_dotenv()
 
-from agent import creer_agent, interroger_agent  # noqa: E402
+from agent import creer_agent, interroger_agent
 
-# ---------------------------------------------------------------------------
-# Agent instancié une seule fois au démarrage
-# ---------------------------------------------------------------------------
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.agent = creer_agent()
@@ -29,9 +27,6 @@ app.add_middleware(
 )
 
 
-# ---------------------------------------------------------------------------
-# Schémas
-# ---------------------------------------------------------------------------
 class QueryRequest(BaseModel):
     query: str
 
@@ -41,9 +36,6 @@ class QueryResponse(BaseModel):
     status: str
 
 
-# ---------------------------------------------------------------------------
-# Endpoints
-# ---------------------------------------------------------------------------
 @app.get("/")
 def root():
     return {"status": "ok", "message": "Agent Financier API"}

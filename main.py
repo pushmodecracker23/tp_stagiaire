@@ -43,9 +43,6 @@ SCENARIOS = [
     },
 ]
 
-# ---------------------------------------------------------------------------
-# Scénario de démonstration de la mémoire conversationnelle (C2)
-# ---------------------------------------------------------------------------
 DEMO_MEMOIRE = [
     "Quel est le type de compte et le solde du client Marie ?",
     "Quel produit lui recommandes-tu ?",
@@ -54,7 +51,6 @@ DEMO_MEMOIRE = [
 
 
 def demo_memoire(agent):
-    """Lance les 3 questions en séquence pour démontrer la mémoire conversationnelle."""
     print("\n" + "=" * 60)
     print("  DÉMONSTRATION — Mémoire conversationnelle (3 questions)")
     print("=" * 60)
@@ -71,7 +67,7 @@ def demo_memoire(agent):
 
 def afficher_menu(nb_scenarios: int):
     print("\n" + "=" * 60)
-    print("     AGENT FINANCIER CLAUDE - Menu Principal")
+    print("     AGENT FINANCIER - Menu Principal")
     print("=" * 60)
     print("\nScénarios prédéfinis :")
     for i, scenario in enumerate(SCENARIOS, 1):
@@ -83,13 +79,13 @@ def afficher_menu(nb_scenarios: int):
 
 
 def main():
-    api_key = os.getenv("ANTHROPIC_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        print("ERREUR : La variable ANTHROPIC_API_KEY n'est pas définie.")
-        print("Créez un fichier .env avec ANTHROPIC_API_KEY=votre_clé")
+        print("ERREUR : La variable OPENAI_API_KEY n'est pas définie.")
+        print("Créez un fichier .env avec OPENAI_API_KEY=votre_clé")
         return
 
-    print("\nInitialisation de l'agent financier Claude...")
+    print("\nInitialisation de l'agent financier...")
     agent = creer_agent()
     print("Agent prêt !\n")
 

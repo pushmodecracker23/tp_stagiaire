@@ -2,10 +2,6 @@ import requests
 
 
 def convertir_devise(input_str: str) -> str:
-    """Convertit un montant d'une devise à une autre via l'API Frankfurter (taux de change réels).
-    Format d'entrée : 'montant,FROM,TO' ex: '100,EUR,USD'.
-    Devises supportées : EUR, USD, GBP, JPY, CHF, CAD, AUD, et bien d'autres.
-    """
     try:
         parts = input_str.strip().split(",")
         if len(parts) != 3:

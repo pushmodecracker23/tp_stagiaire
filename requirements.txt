@@ -1,6 +1,6 @@
 langchain
 langchain-classic
-langchain-anthropic
+langchain-openai
 langchain-community
 langchain-core
 langchain-experimental
@@ -8,7 +8,7 @@ langgraph
 python-dotenv
 mysql-connector-python
 requests
-anthropic
+openai
 yfinance
 tavily-python
 streamlit
